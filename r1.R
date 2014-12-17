@@ -4,7 +4,7 @@
 #   https://www.reit.com/sites/default/files/returns/MonthlyHistoricalReturns.xls
 # ファイルは c:/src/reitに置きます。
 library(xlsx);
-setwd("C:/src/reit")
+setwd("C:/Maka/src/reit")
 reit_historical <- read.xlsx("MonthlyHistoricalReturns.xls", sheetName="Index Data")
 
 
@@ -40,12 +40,6 @@ SP500 <- to.monthly(SP500)[,4]
 #get 1st of month to align when we merge
 index(SP500) <- as.Date(index(SP500)) 
 
-getSymbols("NIKKEI225",src="FRED")
-NIKKEI225 <- to.monthly(NIKKEI225)[,4]
-#get 1st of month to align when we merge
-index(N225) <- as.Date(index(N225)) 
-
-
 
 # REITとSP500のデータをマージします。
 #   Performance AnalysisではS&Pと比較をしたいためにデータをマージします。
@@ -55,7 +49,7 @@ index(N225) <- as.Date(index(N225))
 reit_sp500 <- na.omit(merge(reit_index,SP500))
 reit_sp500 <- ROC(reit_sp500,n=1,type="discrete")
 #最初の行は NAになってしまうために0にしておきます。
-reitSp500[1,] <- 0 
+reit_sp500[1,] <- 0 
 
 
 
@@ -65,9 +59,7 @@ reitSp500[1,] <- 0
 #
 #
 require(PerformanceAnalytics)
-layout(matrix(c(1,2),nrow=1))
 charts.PerformanceSummary(reit_sp500["2000::",],
                          colorset =c("steelblue4","steelblue2","gray50"),
                          main="REITS and the S&P 500 Since 2000") 
 
-close.screen(all=T)
